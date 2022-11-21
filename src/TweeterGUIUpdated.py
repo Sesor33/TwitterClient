@@ -1,33 +1,18 @@
 import sys, os, time
 import tweepy
 import tkinter as tk
-
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-
-try:
-    redirect_url = auth.get_authorization_url()
-
-except tweepy.TweepError:
-    print('Error! Failed to get request token.')
-
-session.set('request_token', auth.request_token['oauth_token'])
-
-# Example w/o callback (desktop)
-verifier = raw_input('Verifier:')
-
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-token = session.get('request_token')
-session.delete('request_token')
-auth.request_token = { 'oauth_token' : token,
-                         'oauth_token_secret' : verifier }
+from secret.private import consumer_key, consumer_secret, access_token, access_token_secret
 
 try:
-    auth.get_access_token(verifier)
+    auth = tweepy.OAuth1UserHandler(
+        consumer_key, consumer_secret, access_token, access_token_secret
+    )
+
+    api = tweepy.API(auth)
+
 except tweepy.TweepError:
     print('Error! Failed to get access token.')
 
-
-api = tweepy.API(auth)
 
 def tweet(msg):
         api.update_status(msg)
